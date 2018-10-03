@@ -1,0 +1,13 @@
+apiVersion: v1
+entries:
+  demo:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-10-03T12:14:26.693334507+09:00
+    description: A Helm chart for Kubernetes
+    digest: c677efc778b455ad3b9d53c03d37cf0002d067ac80da35d0921672a77f3c9bc3
+    name: demo
+    urls:
+    - https://yunsangjun.github.io/my-charts/stable/demo-0.1.0.tgz
+    version: 0.1.0
+generated: 2018-10-03T12:14:26.690034532+09:00
