@@ -20,7 +20,7 @@ my-charts	https://yunsangjun.github.io/my-charts/stable
 ```
 $ helm search my-charts
 NAME          	CHART VERSION	APP VERSION	DESCRIPTION                
-my-charts/demo	0.1.0        	1.0        	A Helm chart for Kubernetes```
+my-charts/demo	0.1.0        	1.0        	A Helm chart for Kubernetes
 ```
 
 ## Using the chart
