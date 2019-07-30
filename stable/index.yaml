@@ -3,11 +3,11 @@ entries:
   demo:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2019-07-30T09:41:44.479820369+09:00"
+    created: "2019-07-30T10:05:05.50661204+09:00"
     description: A Helm chart for Kubernetes
-    digest: 4cf5e5224aefb732ca32ec0318f198786fb28e3922900158c9249ad8ebdd470c
+    digest: f56ad9452436d6989acb9130a1f2baa5d933ebad21b97d8c2c0eec7d79aa63e7
     name: demo
     urls:
     - https://parkjinyong.github.io/my-charts/stable/demo-0.1.0.tgz
     version: 0.1.0
-generated: "2019-07-30T09:41:44.477385695+09:00"
+generated: "2019-07-30T10:05:05.502745083+09:00"
