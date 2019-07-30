@@ -356,7 +356,6 @@ prometheus:
       alb.ingress.kubernetes.io/auth-idp-oidc: '{"Issuer": "https://id-dev.samsunggsre.com/auth/realms/sso", "AuthorizationEndpoint": "https://id-dev.samsunggsre.com/auth/realms/sso/protocol/openid-connect/auth", "TokenEndpoint": "https://id-dev.samsunggsre.com/auth/realms/sso/protocol/openid-connect/token", "UserInfoEndpoint": "https://id-dev.samsunggsre.com/auth/realms/sso/protocol/openid-connect/userinfo", "SecretName": "prometheus-secret"}'
 
 
-
 kubeControllerManager:
   enabled: false
 
