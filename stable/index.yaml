@@ -3,9 +3,9 @@ entries:
   demo:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2019-07-30T10:50:14.712700173Z
+    created: 2019-07-30T10:55:26.449829238Z
     description: A Helm chart for Kubernetes
-    digest: 88921830aff64ce61d5f591e052efbb1c917f7eb9a12a94c726ede5e8d416d4b
+    digest: db842bdee7dfa08e49fb37b30c2858743ce4f4d95c6a3fc415e87083b45937c8
     name: demo
     urls:
     - https://parkjinyong.github.io/my-charts/stable/demo-0.1.0.tgz
@@ -13,9 +13,9 @@ entries:
   prometheus:
   - apiVersion: v1
     appVersion: 2.11.1
-    created: 2019-07-30T10:50:14.714198579Z
+    created: 2019-07-30T10:55:26.451507881Z
     description: Prometheus is a monitoring system and time series database.
-    digest: 11c78867120120b14a5eb3c5bbba0bc7200ae179213059a1fa08a0c37041fb84
+    digest: fd31c40001c6ecfa71bb5a568ba775c9a97f96353038d9dca992c435f75a06e1
     engine: gotpl
     home: https://prometheus.io/
     icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
@@ -35,4 +35,4 @@ entries:
     urls:
     - https://parkjinyong.github.io/my-charts/stable/prometheus-8.15.0.tgz
     version: 8.15.0
-generated: 2019-07-30T10:50:14.712262256Z
+generated: 2019-07-30T10:55:26.449282152Z
