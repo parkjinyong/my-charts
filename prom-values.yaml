@@ -1,0 +1,369 @@
+additionalPrometheusRules:
+  - name: node-custom
+    groups:
+      - name: node-custom-cpu.rules
+        rules:
+        - alert: cpuUsage
+          expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{job="node-exporter",mode="idle"}[5m])) * 100) > 90
+          for: 1m
+          labels:
+            severity: ciritical
+          annotations:
+            message: Instance {{ $labels.instance }} under heavy load
+        - alert: CpuLoad
+          expr: node_load15 / (count without (cpu, mode) (node_cpu_seconds_total{mode="system"})) > 2
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            message: "CPU load (instance {{ $labels.instance }})"
+            description: "CPU load (15m) is high. VALUE = {{ $value }}"
+      - name: node-custom-memory.rules
+        rules:
+        - alert: OutOfMemory
+          expr: (node_memory_MemFree_bytes + node_memory_Cached_bytes + node_memory_Buffers_bytes) / node_memory_MemTotal_bytes * 100 < 10
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            message: "Out of memory (instance {{ $labels.instance }})"
+            description: "Node memory is filling up (< 10% left). VALUE = {{ $value }}"
+        - alert: NodeHasSwap
+          expr: node_memory_SwapTotal_bytes > 0
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            message: "Node has swap (instance {{ $labels.instance }})"
+            description: "Node has swap. VALUE = {{ $value }}"
+      - name: node-custom-network.rules
+        rules:
+        - alert: UnusualNetworkThroughputIn
+          expr: sum by (instance) (irate(node_network_receive_bytes_total[2m])) / 1024 / 1024 > 100
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            message: "Unusual network throughput in (instance {{ $labels.instance }})"
+            description: "Host network interfaces are probably receiving too much data (> 100 MB/s). VALUE = {{ $value }}"
+        - alert: UnusualNetworkThroughputOut
+          expr: sum by (instance) (irate(node_network_transmit_bytes_total[2m])) / 1024 / 1024 > 100
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            message: "Unusual network throughput out (instance {{ $labels.instance }})"
+            description: "Host network interfaces are probably sending too much data (> 100 MB/s). VALUE = {{ $value }}"
+      - name: node-custom-disk.rules
+        rules:
+        - alert: UnusualDiskReadRate
+          expr: sum by (instance) (irate(node_disk_read_bytes_total[2m])) / 1024 / 1024 > 200
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            message: "Unusual disk read rate (instance {{ $labels.instance }})"
+            description: "Disk is probably reading too much data (> 50 MB/s). VALUE = {{ $value }}"
+        - alert: UnusualDiskWriteRate
+          expr: sum by (instance) (irate(node_disk_written_bytes_total[2m])) / 1024 / 1024 > 200
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            message: "Unusual disk write rate (instance {{ $labels.instance }})"
+            description: "Disk is probably writing too much data (> 50 MB/s). VALUE = {{ $value }}"
+        - alert: OutOfDiskSpace
+          expr: node_filesystem_free_bytes{mountpoint ="/rootfs"} / node_filesystem_size_bytes{mountpoint ="/rootfs"} * 100 < 10
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            message: "Out of disk space (instance {{ $labels.instance }})"
+            description: "Disk is almost full (< 10% left). VALUE = {{ $value }}"
+        - alert: OutOfInodes
+          expr: node_filesystem_files_free{mountpoint ="/rootfs"} / node_filesystem_files{mountpoint ="/rootfs"} * 100 < 10
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            message: "Out of inodes (instance {{ $labels.instance }})"
+            description: "Disk is almost running out of available inodes (< 10% left). VALUE = {{ $value }}"
+        - alert: UnusualDiskReadLatency
+          expr: rate(node_disk_read_time_seconds_total[1m]) / rate(node_disk_reads_completed_total[1m]) > 100
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            message: "Unusual disk read latency (instance {{ $labels.instance }})"
+            description: "Disk latency is growing (read operations > 100ms). VALUE = {{ $value }}"
+        - alert: UnusualDiskWriteLatency
+          expr: rate(node_disk_write_time_seconds_total[1m]) / rate(node_disk_writes_completed_total[1m]) > 100
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            message: "Unusual disk write latency (instance {{ $labels.instance }})"
+            description: "Disk latency is growing (write operations > 100ms). VALUE = {{ $value }}"
+  - name: spinnaker
+    groups:
+      - name: spinnaker-alert.rules
+        rules:
+        - alert: spin_igor_Latency
+          expr: sum(rate(igor:controller:invocations__totalTime_total{instance=~".*"}[1m])) by (controller, method)  / sum(rate(igor:controller:invocations__count_total{instance=~".*"}[1m])) by (controller, method) / 1000000 > 200
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job latency is high( > 200ms)"
+            description: "{{ $labels.job }} job latency is high. VALUE = {{ $value }}"
+        - alert: spin_igor_5xx_Errors
+          expr: sum(delta(igor:controller:invocations__count_total{instance=~".*",status="5xx"}[3m])) by (controller, method, statusCode) > 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job is returning 5xx errors"
+            description: "{{ $labels.job }} job is returning 5xx errors\n value: {{ $value }}\n controller: {{ $labels.controller }}\n method: {{ $labels.method }}"
+        - alert: spin_clouddriver_Latency
+          expr: sum(rate(clouddriver:controller:invocations__totalTime_total{instance=~".*"}[1m])) by (controller, method)  / sum(rate(clouddriver:controller:invocations__count_total{instance=~".*"}[1m])) by (controller, method) / 1000000 > 1000
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job latency is high( > 1000ms)"
+            description: "{{ $labels.job }} job latency is high. VALUE = {{ $value }}"
+        - alert: spin_clouddriver_5xx_Errors
+          expr: sum(delta(clouddriver:controller:invocations__count_total{instance=~".*",status="5xx"}[3m])) by (controller, method, statusCode) > 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job is returning 5xx errors"
+            description: "{{ $labels.job }} job is returning 5xx errors\n value: {{ $value }}\n controller: {{ $labels.controller }}\n method: {{ $labels.method }}"
+        - alert: spin_deck_Latency
+          expr: sum(rate(deck:controller:invocations__totalTime_total{instance=~".*"}[1m])) by (controller, method)  / sum(rate(deck:controller:invocations__count_total{instance=~".*"}[1m])) by (controller, method) / 1000000 > 200
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job latency is high( > 200ms)"
+            description: "{{ $labels.job }} job latency is high. VALUE = {{ $value }}"
+        - alert: spin_deck_5xx_Errors
+          expr: sum(delta(deck:controller:invocations__count_total{instance=~".*",status="5xx"}[3m])) by (controller, method, statusCode) > 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job is returning 5xx errors"
+            description: "{{ $labels.job }} job is returning 5xx errors\n value: {{ $value }}\n controller: {{ $labels.controller }}\n method: {{ $labels.method }}"
+        - alert: spin_echo_Latency
+          expr: sum(rate(echo:controller:invocations__totalTime_total{instance=~".*"}[1m])) by (controller, method)  / sum(rate(echo:controller:invocations__count_total{instance=~".*"}[1m])) by (controller, method) / 1000000 > 200
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job latency is high( > 200ms)"
+            description: "{{ $labels.job }} job latency is high. VALUE = {{ $value }}"
+        - alert: spin_echo_5xx_Errors
+          expr: sum(delta(echo:controller:invocations__count_total{instance=~".*",status="5xx"}[3m])) by (controller, method, statusCode) > 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job is returning 5xx errors"
+            description: "{{ $labels.job }} job is returning 5xx errors\n value: {{ $value }}\n controller: {{ $labels.controller }}\n method: {{ $labels.method }}"
+        - alert: spin_front50_Latency
+          expr: sum(rate(front50:controller:invocations__totalTime_total{instance=~".*"}[1m])) by (controller, method)  / sum(rate(front50:controller:invocations__count_total{instance=~".*"}[1m])) by (controller, method) / 1000000 > 200
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job latency is high( > 200ms)"
+            description: "{{ $labels.job }} job latency is high. VALUE = {{ $value }}"
+        - alert: spin_front50_5xx_Errors
+          expr: sum(delta(front50:controller:invocations__count_total{instance=~".*",status="5xx"}[3m])) by (controller, method, statusCode) > 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job is returning 5xx errors"
+            description: "{{ $labels.job }} job is returning 5xx errors\n value: {{ $value }}\n controller: {{ $labels.controller }}\n method: {{ $labels.method }}"
+        - alert: spin_gate_Latency
+          expr: sum(rate(gate:controller:invocations__totalTime_total{instance=~".*"}[1m])) by (controller, method)  / sum(rate(gate:controller:invocations__count_total{instance=~".*"}[1m])) by (controller, method) / 1000000 > 200
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job latency is high( > 200ms)"
+            description: "{{ $labels.job }} job latency is high. VALUE = {{ $value }}"
+        - alert: spin_gate_5xx_Errors
+          expr: sum(delta(gate:controller:invocations__count_total{instance=~".*",status="5xx"}[3m])) by (controller, method, statusCode) > 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job is returning 5xx errors"
+            description: "{{ $labels.job }} job is returning 5xx errors\n value: {{ $value }}\n controller: {{ $labels.controller }}\n method: {{ $labels.method }}"
+        - alert: spin_orca_Latency
+          expr: sum(rate(orca:controller:invocations__totalTime_total{instance=~".*"}[1m])) by (controller, method)  / sum(rate(orca:controller:invocations__count_total{instance=~".*"}[1m])) by (controller, method) / 1000000 > 200
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job latency is high( > 200ms)"
+            description: "{{ $labels.job }} job latency is high. VALUE = {{ $value }}"
+        - alert: spin_orca_5xx_Errors
+          expr: sum(delta(orca:controller:invocations__count_total{instance=~".*",status="5xx"}[3m])) by (controller, method, statusCode) > 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job is returning 5xx errors"
+            description: "{{ $labels.job }} job is returning 5xx errors\n value: {{ $value }}\n controller: {{ $labels.controller }}\n method: {{ $labels.method }}"
+        - alert: spin_rosco_Latency
+          expr: sum(rate(rosco:controller:invocations__totalTime_total{instance=~".*"}[1m])) by (controller, method)  / sum(rate(rosco:controller:invocations__count_total{instance=~".*"}[1m])) by (controller, method) / 1000000 > 200
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job latency is high( > 200ms)"
+            description: "{{ $labels.job }} job latency is high. VALUE = {{ $value }}"
+        - alert: spin_rosco_5xx_Errors
+          expr: sum(delta(rosco:controller:invocations__count_total{instance=~".*",status="5xx"}[3m])) by (controller, method, statusCode) > 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            message: "{{ $labels.job }} job is returning 5xx errors"
+            description: "{{ $labels.job }} job is returning 5xx errors\n value: {{ $value }}\n controller: {{ $labels.controller }}\n method: {{ $labels.method }}"
+  - name: redis
+    groups:
+      - name: redis-alert.rules
+        rules:
+        - alert: RedisDown
+          expr: redis_up == 0
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Redis down (instance {{ $labels.instance }})"
+            description: "Redis instance is down\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+        - alert: MissingBackup
+          expr: time() - redis_rdb_last_save_timestamp_seconds > 60 * 60 * 24
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Missing backup (instance {{ $labels.instance }})"
+            description: "Redis has not been backuped for 24 hours\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+        - alert: OutOfMemory
+          expr: redis_memory_used_bytes / redis_total_system_memory_bytes * 100 > 90
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Out of memory (instance {{ $labels.instance }})"
+            description: "Redis is running out of memory (> 90%)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+        - alert: TooManyConnections
+          expr: redis_connected_clients > 100
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Too many connections (instance {{ $labels.instance }})"
+            description: "Redis instance has too many connections\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+        - alert: NotEnoughConnections
+          expr: redis_connected_clients < 5
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Not enough connections (instance {{ $labels.instance }})"
+            description: "Redis instance should have more connections (> 5)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+        - alert: RejectedConnections
+          expr: increase(redis_rejected_connections_total[1m]) > 0
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Rejected connections (instance {{ $labels.instance }})"
+            description: "Some connections to Redis has been rejected\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+alertmanager:
+  config:
+    global:
+      resolve_timeout: 5m
+    route:
+      group_by: ['job']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 1h
+      receiver: 'default'
+      routes:
+      - match:
+          alertname: Watchdog
+        receiver: 'null'
+    receivers:
+    - name: 'null'
+    - name: 'default'
+      slack_configs:
+      - send_resolved: false
+        api_url: 'https://hooks.slack.com/services/xxxxxx/xxxxxx/xxxxxxxxxxx'
+        username: 'alertmanager-spin-default-wtjv'
+        text: |-
+          {{ range .Alerts }}
+            *Alert:* {{ .Annotations.message }}
+            *Description:* {{ .Annotations.description }}{{ .Annotations.runbook_url }}
+            *Details:*
+            {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+            {{ end }}
+          {{ end }}
+  alertmanagerSpec:
+    storage:
+     volumeClaimTemplate:
+       spec:
+         storageClassName: gp2
+         accessModes: ["ReadWriteOnce"]
+         resources:
+           requests:
+             storage: 50Gi
+       selector: {}
+  service:
+    type: NodePort
+    annotations:
+      alb.ingress.kubernetes.io/auth-type: 'oidc'
+      alb.ingress.kubernetes.io/auth-idp-oidc: '{"Issuer": "https://id-dev.samsunggsre.com/auth/realms/sso", "AuthorizationEndpoint": "https://id-dev.samsunggsre.com/auth/realms/sso/protocol/openid-connect/auth", "TokenEndpoint": "https://id-dev.samsunggsre.com/auth/realms/sso/protocol/openid-connect/token", "UserInfoEndpoint": "https://id-dev.samsunggsre.com/auth/realms/sso/protocol/openid-connect/userinfo", "SecretName": "prometheus-secret"}'
+
+
+grafana:
+  enabled: false
+
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp2
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 50Gi
+        selector: {}
+  service:
+    type: NodePort
+    annotations:
+      alb.ingress.kubernetes.io/auth-type: 'oidc'
+      alb.ingress.kubernetes.io/auth-idp-oidc: '{"Issuer": "https://id-dev.samsunggsre.com/auth/realms/sso", "AuthorizationEndpoint": "https://id-dev.samsunggsre.com/auth/realms/sso/protocol/openid-connect/auth", "TokenEndpoint": "https://id-dev.samsunggsre.com/auth/realms/sso/protocol/openid-connect/token", "UserInfoEndpoint": "https://id-dev.samsunggsre.com/auth/realms/sso/protocol/openid-connect/userinfo", "SecretName": "prometheus-secret"}'
+
+
+
+kubeControllerManager:
+  enabled: false
+
+kubeEtcd:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+
