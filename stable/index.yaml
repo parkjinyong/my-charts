@@ -3,7 +3,7 @@ entries:
   demo:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2019-07-31T06:24:36.257319751Z
+    created: 2019-07-31T11:10:51.968807289Z
     description: A Helm chart for Kubernetes
     digest: 6a5d7fc1e54559a9ecaff953519732ebc69a802afd31a3d7631a1dbec7327115
     name: demo
@@ -13,9 +13,9 @@ entries:
   prometheus:
   - apiVersion: v1
     appVersion: 2.11.1
-    created: 2019-07-31T06:24:36.258849789Z
+    created: 2019-07-31T11:10:51.970805183Z
     description: Prometheus is a monitoring system and time series database.
-    digest: ce43c70e4bfce599cfc5f0d355bad838068cb971768bf2f873c5c65ee8d9b8d6
+    digest: 6dd672c7b9d416f4f130005dc47cf5bd57c856a6bc02c3fe3f638453a758aadd
     engine: gotpl
     home: https://prometheus.io/
     icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
@@ -35,29 +35,4 @@ entries:
     urls:
     - https://parkjinyong.github.io/my-charts/stable/prometheus-8.15.0.tgz
     version: 8.15.0
-  prometheus-operator:
-  - apiVersion: v1
-    appVersion: 0.31.1
-    created: 2019-07-31T06:24:36.271766757Z
-    description: Provides easy monitoring definitions for Kubernetes services, and
-      deployment and management of Prometheus instances.
-    digest: c15689897db0edeffedfb1c1b03120a92390abaafb92f9ee10610e951fb925a8
-    engine: gotpl
-    home: https://github.com/coreos/prometheus-operator
-    icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
-    keywords:
-    - operator
-    - prometheus
-    maintainers:
-    - email: gianrubio@gmail.com
-      name: gianrubio
-    - name: anothertobi
-    - name: vsliouniaev
-    name: prometheus-operator
-    sources:
-    - https://github.com/coreos/prometheus-operator
-    - https://coreos.com/operators/prometheus
-    urls:
-    - https://parkjinyong.github.io/my-charts/stable/prometheus-operator-6.2.1.tgz
-    version: 6.2.1
-generated: 2019-07-31T06:24:36.256838892Z
+generated: 2019-07-31T11:10:51.967987785Z

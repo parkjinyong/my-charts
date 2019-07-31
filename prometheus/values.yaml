@@ -236,9 +236,7 @@ alertmanager:
     fsGroup: 65534
 
   service:
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
-      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    annotations: {}
     labels: {}
     clusterIP: ""
 
@@ -255,8 +253,7 @@ alertmanager:
     loadBalancerSourceRanges: []
     servicePort: 80
     # nodePort: 30000
-    #type: ClusterIP
-    type: LoadBalancer
+    type: ClusterIP
 
 ## Monitors ConfigMap changes and POSTs to a URL
 ## Ref: https://github.com/jimmidyson/configmap-reload
@@ -696,7 +693,7 @@ server:
 
     ## Prometheus server data Persistent Volume size
     ##
-    size: 15Gi
+    size: 8Gi
 
     ## Prometheus server data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
@@ -765,9 +762,7 @@ server:
     fsGroup: 65534
 
   service:
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
-      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    annotations: {}
     labels: {}
     clusterIP: ""
 
@@ -779,7 +774,7 @@ server:
     loadBalancerIP: ""
     loadBalancerSourceRanges: []
     servicePort: 80
-    type: LoadBalancer
+    type: ClusterIP
 
   ## Prometheus server pod termination grace period
   ##
