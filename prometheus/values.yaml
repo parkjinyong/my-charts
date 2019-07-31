@@ -236,7 +236,9 @@ alertmanager:
     fsGroup: 65534
 
   service:
-    annotations: {}
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
     labels: {}
     clusterIP: ""
 
@@ -253,7 +255,8 @@ alertmanager:
     loadBalancerSourceRanges: []
     servicePort: 80
     # nodePort: 30000
-    type: ClusterIP
+    #type: ClusterIP
+    type: LoadBalancer
 
 ## Monitors ConfigMap changes and POSTs to a URL
 ## Ref: https://github.com/jimmidyson/configmap-reload
