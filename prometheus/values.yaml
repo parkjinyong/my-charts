@@ -765,7 +765,9 @@ server:
     fsGroup: 65534
 
   service:
-    annotations: {}
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
     labels: {}
     clusterIP: ""
 
@@ -777,7 +779,7 @@ server:
     loadBalancerIP: ""
     loadBalancerSourceRanges: []
     servicePort: 80
-    type: ClusterIP
+    type: LoadBalancer
 
   ## Prometheus server pod termination grace period
   ##
