@@ -3,7 +3,7 @@ entries:
   demo:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2019-08-02T05:29:34.39590013Z
+    created: 2019-08-02T05:30:33.516818325Z
     description: A Helm chart for Kubernetes
     digest: 6a5d7fc1e54559a9ecaff953519732ebc69a802afd31a3d7631a1dbec7327115
     name: demo
@@ -13,9 +13,9 @@ entries:
   prometheus:
   - apiVersion: v1
     appVersion: 2.11.1
-    created: 2019-08-02T05:29:34.397632537Z
+    created: 2019-08-02T05:30:33.518511523Z
     description: Prometheus is a monitoring system and time series database.
-    digest: 9c9954a89053f561a0801103311c4c169fc6ad5fd737225337d0407556050943
+    digest: ebc129448437a125eed81df878c7d112fd9fbe547a28ac05e771f59ecbcd40c5
     engine: gotpl
     home: https://prometheus.io/
     icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
@@ -38,7 +38,7 @@ entries:
   prometheus-operator:
   - apiVersion: v1
     appVersion: 0.31.1
-    created: 2019-08-02T05:29:34.409622012Z
+    created: 2019-08-02T05:30:33.530342391Z
     description: Provides easy monitoring definitions for Kubernetes services, and
       deployment and management of Prometheus instances.
     digest: 04bcf413b4d09af9ce13bcd401ac673d956be14011a8669f0adb87f42e9a690c
@@ -60,4 +60,4 @@ entries:
     urls:
     - https://parkjinyong.github.io/my-charts/stable/prometheus-operator-6.2.1.tgz
     version: 6.2.1
-generated: 2019-08-02T05:29:34.395297168Z
+generated: 2019-08-02T05:30:33.516276942Z
