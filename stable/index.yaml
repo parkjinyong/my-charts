@@ -3,7 +3,7 @@ entries:
   demo:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2019-08-02T04:39:01.430291559Z
+    created: 2019-08-02T05:00:14.826323693Z
     description: A Helm chart for Kubernetes
     digest: 6a5d7fc1e54559a9ecaff953519732ebc69a802afd31a3d7631a1dbec7327115
     name: demo
@@ -13,7 +13,7 @@ entries:
   prometheus:
   - apiVersion: v1
     appVersion: 2.11.1
-    created: 2019-08-02T04:39:01.433331176Z
+    created: 2019-08-02T05:00:14.828577172Z
     description: Prometheus is a monitoring system and time series database.
     digest: 6dd672c7b9d416f4f130005dc47cf5bd57c856a6bc02c3fe3f638453a758aadd
     engine: gotpl
@@ -35,4 +35,29 @@ entries:
     urls:
     - https://parkjinyong.github.io/my-charts/stable/prometheus-8.15.0.tgz
     version: 8.15.0
-generated: 2019-08-02T04:39:01.429456503Z
+  prometheus-operator:
+  - apiVersion: v1
+    appVersion: 0.31.1
+    created: 2019-08-02T05:00:14.840014182Z
+    description: Provides easy monitoring definitions for Kubernetes services, and
+      deployment and management of Prometheus instances.
+    digest: 04bcf413b4d09af9ce13bcd401ac673d956be14011a8669f0adb87f42e9a690c
+    engine: gotpl
+    home: https://github.com/coreos/prometheus-operator
+    icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
+    keywords:
+    - operator
+    - prometheus
+    maintainers:
+    - email: gianrubio@gmail.com
+      name: gianrubio
+    - name: anothertobi
+    - name: vsliouniaev
+    name: prometheus-operator
+    sources:
+    - https://github.com/coreos/prometheus-operator
+    - https://coreos.com/operators/prometheus
+    urls:
+    - https://parkjinyong.github.io/my-charts/stable/prometheus-operator-6.2.1.tgz
+    version: 6.2.1
+generated: 2019-08-02T05:00:14.825870565Z
